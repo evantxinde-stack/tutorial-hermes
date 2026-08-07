@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tutorial Hermes Agent — Panduan Lengkap untuk Pemula</title>
+<style>
+  :root {
+    --bg: #0c1f14;
+    --bg2: #132b1d;
+    --border: #1f4d33;
+    --text: #e8f5ec;
+    --muted: #8fae9c;
+    --accent: #34d399;
+    --green: #22c55e;
+    --purple: #4ade80;
+    --yellow: #fbbf24;
+    --red: #f87171;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+  }
+  header {
+    background: linear-gradient(135deg, #052e16 0%, #14532d 50%, #16a34a 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 60px 20px;
+    text-align: center;
+  }
+  header h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    background: linear-gradient(90deg, #ffffff, #86efac);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  header p { color: #d1fae5; font-size: 1.2em; max-width: 700px; margin: 0 auto; }
+  .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(134,239,172,0.5);
+    color: #bbf7d0;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    margin: 8px 4px 0;
+  }
+  main { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+  nav {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 40px;
+  }
+  nav h2 { color: var(--accent); margin-bottom: 12px; font-size: 1.1em; }
+  nav a { color: var(--accent); text-decoration: none; display: block; padding: 3px 0; }
+  nav a:hover { text-decoration: underline; }
+  section { margin-bottom: 50px; }
+  h2 {
+    font-size: 1.8em;
+    color: var(--accent);
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--border);
+  }
+  h3 { color: var(--purple); margin: 25px 0 10px; font-size: 1.2em; }
+  p { margin-bottom: 12px; color: var(--text); }
+  ul, ol { margin: 10px 0 15px 25px; }
+  li { margin-bottom: 6px; }
+  code {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: var(--yellow);
+    font-family: 'SF Mono', Consolas, monospace;
+  }
+  pre {
+    background: #04120a;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    overflow-x: auto;
+    margin: 12px 0 20px;
+    position: relative;
+  }
+  pre code { border: none; padding: 0; color: #bbf7d0; background: none; font-size: 0.9em; }
+  .cmd { color: #86efac; }
+  .comment { color: #6b7280; }
+  .warning {
+    background: rgba(251,191,36,0.08);
+    border-left: 4px solid var(--yellow);
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    margin: 15px 0;
+  }
+  .tip {
+    background: rgba(34,197,94,0.08);
+    border-left: 4px solid var(--green);
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    margin: 15px 0;
+  }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+  th, td { padding: 10px 14px; text-align: left; border: 1px solid var(--border); }
+  th { background: var(--bg2); color: var(--accent); }
+  tr:nth-child(even) { background: rgba(19,43,29,0.5); }
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 30px 20px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.9em;
+  }
+  @media (max-width: 600px) {
+    header h1 { font-size: 1.8em; }
+    main { padding: 20px 14px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🚀 Tutorial Hermes Agent</h1>
+  <p>Panduan lengkap menginstall, mengkonfigurasi, dan menggunakan Hermes Agent — AI assistant pribadi yang bisa diotomatisasi.</p>
+  <div>
+    <span class="badge">Open Source</span>
+    <span class="badge">AI Agent</span>
+    <span class="badge">Automation</span>
+    <span class="badge">Multi-Platform</span>
+  </div>
+</header>
+
+<main>
+  <nav>
+    <h2>📑 Daftar Isi</h2>
+    <a href="#apa-itu">1. Apa itu Hermes Agent?</a>
+    <a href="#fitur">2. Fitur Utama</a>
+    <a href="#instalasi">3. Instalasi</a>
+    <a href="#setup-awal">4. Setup Awal & Konfigurasi</a>
+    <a href="#penggunaan">5. Cara Menggunakan</a>
+    <a href="#otomasi">6. Otomasi dengan Cron Jobs</a>
+    <a href="#provider">7. Mengganti AI Provider</a>
+    <a href="#telegram">8. Integrasi Telegram</a>
+    <a href="#tips">9. Tips & Best Practices</a>
+    <a href="#studi-kasus">10. Studi Kasus</a>
+    <a href="#faq">11. FAQ</a>
+    <a href="#troubleshoot">12. Troubleshooting</a>
+  </nav>
+
+  <section id="apa-itu">
+    <h2>1. Apa itu Hermes Agent?</h2>
+    <p>Hermes Agent adalah <strong>AI assistant pribadi berbasis agen (agentic AI)</strong> yang dikembangkan oleh Nous Research. Berbeda dengan chatbot biasa yang hanya menjawab pertanyaan, Hermes Agent bisa:</p>
+    <ul>
+      <li>🤖 <strong>Menggunakan tools</strong> — menjalankan terminal, membaca file, browsing web, mengirim pesan</li>
+      <li>⏰ <strong>Bekerja terjadwal</strong> — menjalankan tugas otomatis via cron jobs</li>
+      <li>🧠 <strong>Memiliki memori</strong> — mengingat preferensi dan konteks antar sesi</li>
+      <li>🔌 <strong>Terintegrasi</strong> — Telegram, WhatsApp, Discord, API server</li>
+      <li>🎓 <strong>Belajar dari pengalaman</strong> — menyimpan skill dan pengetahuan baru</li>
+    </ul>
+    <p>Intinya: Hermes bukan sekadar "chatbot yang jawab pertanyaan", tapi <strong>asisten digital yang bisa bertindak</strong> — mengeksekusi perintah, mengelola file, dan menjalankan automasi.</p>
+  </section>
+
+  <section id="fitur">
+    <h2>2. Fitur Utama</h2>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Fitur</th><th>Deskripsi</th></tr>
+        <tr><td>🧠 Memory Persisten</td><td>Menyimpan fakta tentang user & lingkungan antar sesi</td></tr>
+        <tr><td>⚒️ Tool Ecosystem</td><td>Terminal, file editor, web search, browser, image gen, TTS</td></tr>
+        <tr><td>⏰ Cron Jobs</td><td>Jadwalkan tugas otomatis (daily briefing, monitoring, dll)</td></tr>
+        <tr><td>📱 Multi-Platform</td><td>Telegram, Discord, WhatsApp, CLI, API, web</td></tr>
+        <tr><td>🎯 Skills</td><td>Modul pengetahuan & prosedur yang bisa dipasang/dibuat sendiri</td></tr>
+        <tr><td>👥 Multi-Agent</td><td>Delegasi tugas ke sub-agent paralel</td></tr>
+        <tr><td>🔀 Multi-Provider</td><td>Support OpenAI, Anthropic, Google, OpenRouter, atau custom endpoint</td></tr>
+        <tr><td>🛡️ Sandbox</td><td>Menjalankan kode di lingkungan terisolasi (Docker)</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section id="instalasi">
+    <h2>3. Instalasi</h2>
+    <h3>3.1 Installer Resmi (Linux/macOS)</h3>
+    <pre><code><span class="cmd">curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash</span></code></pre>
+
+    <h3>3.2 Via pip (Python 3.10+)</h3>
+    <pre><code><span class="cmd">pip install hermes-agent</span>  <span class="comment"># atau: pipx install hermes-agent</span></code></pre>
+
+    <h3>3.3 Verifikasi Instalasi</h3>
+    <pre><code><span class="cmd">hermes --version</span>
+<span class="cmd">hermes doctor</span>   <span class="comment"># cek kesehatan instalasi</span></code></pre>
+
+    <div class="tip">💡 <strong>Tip:</strong> Hermes membutuhkan Python 3.10+. Jika belum ada, install dulu via <code>sudo apt install python3.11 python3-pip</code> (Ubuntu/Debian).</div>
+  </section>
+
+  <section id="setup-awal">
+    <h2>4. Setup Awal & Konfigurasi</h2>
+    <h3>4.1 Setup Interaktif</h3>
+    <pre><code><span class="cmd">hermes setup</span></code></pre>
+    <p>Wizard ini akan memandu: pilih provider AI, model default, dan konfigurasi dasar lainnya.</p>
+
+    <h3>4.2 Konfigurasi Manual (config.yaml)</h3>
+    <pre><code><span class="comment"># File: ~/.hermes/config.yaml</span>
+model:
+  provider: anthropic          <span class="comment"># atau: openai, google, openrouter, custom</span>
+  model: claude-sonnet-4-5     <span class="comment"># model default</span>
+  api_key: sk-xxx              <span class="comment"># API key provider</span>
+
+telegram:
+  enabled: true
+  bot_token: 123456:ABC-DEF    <span class="comment"># token bot dari @BotFather</span>
+  chat_id: 123456789           <span class="comment"># chat ID tujuan</span></code></pre>
+
+    <h3>4.3 Set Konfigurasi via CLI</h3>
+    <pre><code><span class="cmd">hermes config set model.provider openai</span>
+<span class="cmd">hermes config set model.model gpt-4o</span>
+<span class="cmd">hermes config set telegram.enabled true</span>
+<span class="cmd">hermes config get model</span>   <span class="comment"># lihat konfigurasi saat ini</span></code></pre>
+  </section>
+
+  <section id="penggunaan">
+    <h2>5. Cara Menggunakan</h2>
+    <h3>5.1 CLI Chat</h3>
+    <pre><code><span class="cmd">hermes chat</span>          <span class="comment"># mulai sesi chat interaktif</span>
+<span class="cmd">hermes chat -q "Halo, apa kabar?"</span>   <span class="comment"># one-shot query</span>
+<span class="cmd">hermes chat --resume</span>  <span class="comment"># lanjutkan sesi sebelumnya</span></code></pre>
+
+    <h3>5.2 Commands Penting</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Command</th><th>Fungsi</th></tr>
+        <tr><td><code>hermes chat</code></td><td>Chat interaktif dengan AI</td></tr>
+        <tr><td><code>hermes gateway run</code></td><td>Jalankan gateway API server</td></tr>
+        <tr><td><code>hermes dashboard</code></td><td>Dashboard web (sessions, skills)</td></tr>
+        <tr><td><code>hermes cron list</code></td><td>Lihat semua cron jobs terjadwal</td></tr>
+        <tr><td><code>hermes skills list</code></td><td>Lihat skills yang terinstall</td></tr>
+        <tr><td><code>hermes memory show</code></td><td>Lihat memori persisten</td></tr>
+        <tr><td><code>hermes doctor</code></td><td>Diagnosa kesehatan sistem</td></tr>
+        <tr><td><code>hermes auth add</code></td><td>Tambah kredensial provider</td></tr>
+      </table>
+    </div>
+
+    <h3>5.3 Web Workspace</h3>
+    <pre><code><span class="cmd">hermes gateway run</span>   <span class="comment"># terminal 1 — API server di :8642</span>
+<span class="cmd">hermes dashboard</span>     <span class="comment"># terminal 2 — dashboard di :9119</span></code></pre>
+    <p>Buka <code>http://localhost:3001</code> (Hermes Workspace) untuk antarmuka web lengkap: chat, terminal, memory, skills, dan jobs.</p>
+  </section>
+
+  <section id="otomasi">
+    <h2>6. Otomasi dengan Cron Jobs</h2>
+    <p>Salah satu fitur paling powerful — Hermes bisa menjalankan tugas <strong>terjadwal otomatis</strong>:</p>
+
+    <h3>6.1 Membuat Cron Job</h3>
+    <pre><code><span class="cmd">hermes cron add --schedule "0 7 * * *" --prompt "Buat briefing berita pagi hari ini" --name "daily-briefing"</span></code></pre>
+
+    <h3>6.2 Format Schedule (Cron Expression)</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Expression</th><th>Arti</th></tr>
+        <tr><td><code>0 7 * * *</code></td><td>Setiap hari jam 07:00</td></tr>
+        <tr><td><code>*/30 * * * *</code></td><td>Setiap 30 menit</td></tr>
+        <tr><td><code>0 9 * * 1-5</code></td><td>Senin-Jumat jam 09:00</td></tr>
+        <tr><td><code>0 0 1 * *</code></td><td>Tanggal 1 setiap bulan jam 00:00</td></tr>
+        <tr><td><code>every 2h</code></td><td>Setiap 2 jam (format manusiawi)</td></tr>
+        <tr><td><code>30m</code></td><td>Setiap 30 menit (format sederhana)</td></tr>
+      </table>
+    </div>
+
+    <h3>6.3 Manage Cron Jobs</h3>
+    <pre><code><span class="cmd">hermes cron list</span>      <span class="comment"># lihat semua job</span>
+<span class="cmd">hermes cron pause &lt;job_id&gt;</span>  <span class="comment"># pause job</span>
+<span class="cmd">hermes cron resume &lt;job_id&gt;</span> <span class="comment"># lanjutkan job</span>
+<span class="cmd">hermes cron remove &lt;job_id&gt;</span> <span class="comment"># hapus job</span>
+<span class="cmd">hermes cron run &lt;job_id&gt;</span>    <span class="comment"># jalankan manual sekarang</span></code></pre>
+
+    <div class="tip">💡 <strong>Ide otomasi:</strong> briefing berita pagi, monitor harga crypto, laporan kesehatan, backup file, reminder jadwal, dan banyak lagi!</div>
+  </section>
+
+  <section id="provider">
+    <h2>7. Mengganti AI Provider</h2>
+    <p>Hermes mendukung banyak provider AI. Kamu bisa switch kapan saja:</p>
+
+    <h3>7.1 Provider Resmi</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Provider</th><th>Set via</th><th>Contoh Model</th></tr>
+        <tr><td>Anthropic</td><td><code>ANTHROPIC_API_KEY</code></td><td>claude-sonnet-4-5</td></tr>
+        <tr><td>OpenAI</td><td><code>OPENAI_API_KEY</code></td><td>gpt-4o, gpt-5</td></tr>
+        <tr><td>Google</td><td><code>GOOGLE_API_KEY</code></td><td>gemini-2.5-pro</td></tr>
+        <tr><td>OpenRouter</td><td><code>OPENROUTER_API_KEY</code></td><td>Ratusan model dari berbagai vendor</td></tr>
+      </table>
+    </div>
+
+    <h3>7.2 Custom Endpoint (OpenAI-compatible)</h3>
+    <p>Bisa pakai server LLM sendiri (Ollama, vLLM, LM Studio) atau AI router seperti 9Router:</p>
+    <pre><code><span class="cmd">hermes config set model.provider custom</span>
+<span class="cmd">hermes config set model.base_url http://localhost:20128/v1</span>
+<span class="cmd">hermes config set model.api_key 9r-xxxx</span>
+<span class="cmd">hermes config set model.default kr/claude-sonnet-4.5</span></code></pre>
+
+    <div class="tip">💡 <strong>Hemat budget:</strong> Kombinasi AI router (seperti 9Router) + provider gratis bisa membuat biaya AI harian mendekati nol.</div>
+  </section>
+
+  <section id="telegram">
+    <h2>8. Integrasi Telegram</h2>
+    <h3>8.1 Buat Bot Telegram</h3>
+    <ol>
+      <li>Buka Telegram, chat <strong>@BotFather</strong></li>
+      <li>Kirim <code>/newbot</code>, ikuti instruksi, dapatkan <strong>bot token</strong></li>
+      <li>Buat grup/chat, tambahkan bot, kirim pesan ke bot</li>
+    </ol>
+
+    <h3>8.2 Konfigurasi di Hermes</h3>
+    <pre><code><span class="cmd">hermes config set telegram.enabled true</span>
+<span class="cmd">hermes config set telegram.bot_token 123456789:AAH-xxxx</span></code></pre>
+
+    <h3>8.3 Fitur Telegram</h3>
+    <ul>
+      <li>💬 Chat dengan AI langsung dari Telegram</li>
+      <li>🔔 Notifikasi hasil cron jobs otomatis</li>
+      <li>📁 Kirim & terima file</li>
+      <li>👥 Support group chat (dengan mode topic)</li>
+    </ul>
+
+    <div class="warning">⚠️ <strong>Penting:</strong> Jika bot tidak membalas di grup, cek <strong>Privacy Mode</strong> di @BotFather → <code>/setprivacy</code> → Disable. Ini penyebab paling umum bot diam di grup!</div>
+  </section>
+
+  <section id="tips">
+    <h2>9. Tips & Best Practices</h2>
+    <ul>
+      <li>🧠 <strong>Gunakan memory</strong> — simpan preferensi agar AI tidak perlu ditanya ulang</li>
+      <li>🎯 <strong>Buat skill</strong> — untuk tugas berulang, buat skill khusus daripada prompt panjang</li>
+      <li>⏰ <strong>Otomasi dulu, mikir belakangan</strong> — mulai dari 1-2 cron job yang paling sering kamu butuhkan</li>
+      <li>💰 <strong>Kelola budget</strong> — pantau penggunaan API, gunakan model murah untuk tugas sederhana</li>
+      <li>🔐 <strong>Amankan API keys</strong> — jangan commit ke git publik, gunakan environment variables</li>
+      <li>📊 <strong>Pantau dengan dashboard</strong> — gunakan <code>hermes dashboard</code> untuk lihat usage</li>
+      <li>🔄 <strong>Update rutin</strong> — <code>pip install -U hermes-agent</code> untuk versi terbaru</li>
+    </ul>
+  </section>
+
+  <section id="studi-kasus">
+    <h2>10. Studi Kasus</h2>
+
+    <h3>📰 Studi Kasus 1: Content Creator — Automasi Konten Harian</h3>
+    <p><strong>Latar belakang:</strong> Seorang content creator Instagram perlu posting 2x sehari (pagi & sore) dengan konten yang konsisten dan relevan.</p>
+    <p><strong>Solusi Hermes:</strong></p>
+    <ul>
+      <li>📝 <strong>Cron job pagi (07:00):</strong> Generate ide konten + caption berdasarkan tren terbaru</li>
+      <li>🖼️ <strong>Cron job sore (19:00):</strong> Generate deskripsi + hashtag untuk visual yang sudah dibuat</li>
+      <li>🧠 <strong>Memory:</strong> Menyimpan brand voice, tone, dan preferensi gaya konten</li>
+      <li>🎯 <strong>Skill khusus:</strong> Carousel image generator + caption template</li>
+    </ul>
+    <p><strong>Hasil:</strong> Produksi konten 2x lipat dengan effort manual 70% lebih rendah. Semua draft otomatis sampai ke Telegram untuk review sebelum posting.</p>
+
+    <h3>💼 Studi Kasus 2: Digital Marketer — Monitoring Brand & Kompetitor</h3>
+    <p><strong>Latar belakang:</strong> Seorang digital marketer perlu memantau berita, mention brand, dan aktivitas kompetitor setiap hari.</p>
+    <p><strong>Solusi Hermes:</strong></p>
+    <ul>
+      <li>🔍 <strong>Cron job tiap 2 jam:</strong> Search web & social media untuk mention brand + kompetitor</li>
+      <li>📊 <strong>Auto-summarize:</strong> Hermes merangkum berita penting jadi 3-5 poin singkat</li>
+      <li>📬 <strong>Deliver via Telegram:</strong> Ringkasan dikirim otomatis ke grup tim</li>
+      <li>🧠 <strong>Learning loop:</strong> Hermes belajar keywords penting dari sesi ke sesi</li>
+    </ul>
+    <p><strong>Hasil:</strong> Tim selalu up-to-date tanpa manual scrolling. Waktu monitoring turun dari 2 jam/hari menjadi 10 menit review.</p>
+
+    <h3>💪 Studi Kasus 3: Personal Health Coach — Reminder & Tracking</h3>
+    <p><strong>Latar belakang:</strong> Seseorang ingin konsisten dengan target kesehatan (berat badan, olahraga, tidur).</p>
+    <p><strong>Solusi Hermes:</strong></p>
+    <ul>
+      <li>⏰ <strong>Cron jobs terjadwal:</strong> Reminder bangun pagi (06:30), sarapan (07:00), olahraga (07:30), napas malam (20:30), tidur (22:15)</li>
+      <li>📝 <strong>Check-in mingguan:</strong> Hermes tanya berat badan & progres, simpan di memori</li>
+      <li>🍳 <strong>Konteks personal:</strong> Hermes ingat preferensi diet (contoh: vegetarian, target kalori) dan sesuaikan saran</li>
+      <li>💬 <strong>Interaktif:</strong> User bisa reply langsung ke reminder untuk update kondisi</li>
+    </ul>
+    <p><strong>Hasil:</strong> Konsistensi naik signifikan karena reminder datang otomatis di waktu yang tepat, dengan pesan yang personal bukan template.</p>
+
+    <h3>🛠️ Studi Kasus 4: Developer — Automasi Coding Tasks</h3>
+    <p><strong>Latar belakang:</strong> Developer sibuk dengan banyak repo dan PR review.</p>
+    <p><strong>Solusi Hermes + coding agents:</strong></p>
+    <ul>
+      <li>🤖 <strong>Delegasi coding:</strong> Hermes melempar tugas ke Codex/OpenCode/Claude Code CLI</li>
+      <li>🔀 <strong>Parallel worktrees:</strong> Banyak task dikerjakan paralel di worktree terpisah</li>
+      <li>👀 <strong>PR review otomatis:</strong> Hermes clone repo, review PR, kirim komentar via gh CLI</li>
+      <li>🧭 <strong>Knowledge graph:</strong> Graphify memetakan codebase besar jadi graph yang bisa di-query</li>
+    </ul>
+    <p><strong>Hasil:</strong> Developer fokus ke arsitektur & keputusan penting, kerjaan repetitif didelegasikan ke agent.</p>
+  </section>
+
+  <section id="faq">
+    <h2>11. FAQ — Pertanyaan yang Sering Diajukan</h2>
+
+    <h3>❓ Apakah Hermes Agent gratis?</h3>
+    <p>Hermes Agent-nya sendiri <strong>open source & gratis</strong> (MIT license). Yang berbayar adalah API model AI yang kamu gunakan (OpenAI, Anthropic, dll). Tapi ada banyak opsi gratis: model open-source lokal (Ollama), provider gratis, atau AI router dengan akses model gratis.</p>
+
+    <h3>❓ Apa bedanya Hermes Agent dengan ChatGPT?</h3>
+    <p>ChatGPT adalah chatbot di website — kamu ketik, dia jawab. Hermes adalah <strong>agen yang bisa bertindak</strong>: menjalankan perintah terminal, mengelola file, browsing, dan menjalankan tugas otomatis terjadwal. Hermes juga punya memori persisten dan bisa dideploy di server sendiri.</p>
+
+    <h3>❓ Berapa biaya menjalankan Hermes?</h3>
+    <p>Biaya = biaya API model yang dipakai. Contoh: dengan model hemat + kombinasi provider gratis, biaya bisa <strong>di bawah $5-10/bulan</strong>. Model open-source lokal bisa <strong>nol rupiah</strong> (hanya butuh listrik).</p>
+
+    <h3>❓ Bisakah Hermes dipakai di HP?</h3>
+    <p>Bisa! Melalui <strong>Telegram</strong> (paling populer), WhatsApp, atau web workspace. Kamu deploy Hermes di server/VPS, lalu akses dari mana saja via HP.</p>
+
+    <h3>❓ Apakah Hermes bisa dipakai banyak orang sekaligus?</h3>
+    <p>Bisa — lewat gateway API server, Hermes melayani banyak pengguna (multi-user). Cocok untuk tim kecil. Setiap user bisa punya chat/session sendiri.</p>
+
+    <h3>❓ Data saya aman tidak?</h3>
+    <p>Kamu <strong>kontrol sendiri</strong> server & datanya. Hermes self-hosted = data tidak keluar dari server kecuali request ke API model. Kamu bisa pilih model lokal (Ollama) agar data 100% di server sendiri.</p>
+
+    <h3>❓ Model AI apa yang bisa dipakai?</h3>
+    <p>Hampir semua: Claude (Anthropic), GPT (OpenAI), Gemini (Google), DeepSeek, Qwen, Llama lokal, dan ratusan model via OpenRouter atau AI router lainnya. Bahkan bisa ganti model di tengah percakapan.</p>
+
+    <h3>❓ Apakah Hermes bisa membaca file saya?</h3>
+    <p>Ya — dengan izinmu, Hermes bisa membaca & mengedit file di server, menjalankan script, dan mengelola repository. Semua aksi tercatat dan bisa diawasi.</p>
+
+    <h3>❓ Apa itu "Skill" di Hermes?</h3>
+    <p>Skill = <strong>pengetahuan prosedural</strong> yang bisa dipasang/dibuat. Contoh: skill riset pasar, skill health coach, skill bikin carousel. Skill membuat Hermes ahli di domain spesifik tanpa perlu dijelaskan ulang.</p>
+
+    <h3>❓ Bagaimana kalau terjadi error?</h3>
+    <p>Mulai dari <code>hermes doctor</code> untuk diagnosa. Cek log di <code>~/.hermes/logs/</code>. Mayoritas masalah umum punya solusi yang terdokumentasi — lihat tabel troubleshooting di bawah.</p>
+
+    <h3>❓ Bisakah Hermes dipakai untuk trading?</h3>
+    <p>Bisa — banyak user membuat cron job monitoring harga crypto/saham, berita pasar, dan analisis. <strong>Disclaimer:</strong> keputusan trading tetap tanggung jawabmu, AI hanya alat bantu analisis.</p>
+
+    <h3>❓ Apakah perlu bisa coding untuk pakai Hermes?</h3>
+    <p><strong>Tidak wajib.</strong> Fitur dasar (chat, cron jobs, Telegram) bisa dipakai tanpa coding — semua lewat command sederhana atau config. Kemampuan coding membuatmu bisa custom lebih dalam, tapi bukan prasyarat.</p>
+  </section>
+
+  <section id="troubleshoot">
+    <h2>12. Troubleshooting</h2>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Masalah</th><th>Solusi</th></tr>
+        <tr><td>Bot tidak balas di grup</td><td>Disable Privacy Mode di @BotFather → /setprivacy</td></tr>
+        <tr><td>Error API key</td><td>Cek <code>hermes config get model</code> dan pastikan key valid</td></tr>
+        <tr><td>Cron job gagal</td><td>Lihat log: <code>hermes cron list</code> → cek status job</td></tr>
+        <tr><td>Connection refused</td><td>Pastikan gateway jalan: <code>hermes gateway run</code></td></tr>
+        <tr><td>Model tidak ditemukan</td><td>Cek nama model persis: <code>curl http://localhost:20128/v1/models</code></td></tr>
+        <tr><td>Provider error 400</td><td>Model ID salah format — cek dokumentasi provider</td></tr>
+      </table>
+    </div>
+
+    <h3>Diagnosa Cepat</h3>
+    <pre><code><span class="cmd">hermes doctor</span>            <span class="comment"># cek kesehatan semua komponen</span>
+<span class="cmd">hermes --version</span>          <span class="comment"># cek versi terinstall</span>
+<span class="cmd">tail -f ~/.hermes/logs/gateway.log</span>  <span class="comment"># pantau log real-time</span></code></pre>
+  </section>
+
+</main>
+
+<footer>
+  <p>📚 Tutorial Hermes Agent — dibuat dengan ❤️ untuk komunitas belajar AI</p>
+  <p>Dokumentasi resmi: <a href="https://hermes-agent.nousresearch.com/docs" style="color: var(--accent);">hermes-agent.nousresearch.com/docs</a></p>
+</footer>
+
+</body>
+</html>

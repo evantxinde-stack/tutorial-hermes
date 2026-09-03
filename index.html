@@ -118,13 +118,108 @@
     color: var(--muted);
     font-size: 0.9em;
   }
+  /* ===== Lead Gate (modal unlock) ===== */
+  main { transition: filter .5s ease; }
+  body.gated main {
+    filter: blur(9px) brightness(.55);
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  body.modal-open { overflow: hidden; }
+
+  #gateModal {
+    position: fixed; inset: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: center;
+    padding: 18px;
+    background: rgba(2, 10, 6, .78);
+    backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+  }
+  #gateModal.hidden, #unlockBanner.hidden { display: none; }
+
+  .gate-card {
+    width: 100%; max-width: 430px;
+    background: linear-gradient(160deg, #0b2a1a 0%, #123625 55%, #0a1f13 100%);
+    border: 1px solid #2b6e49; border-radius: 20px;
+    padding: 30px 26px 22px; position: relative; text-align: center;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, .6);
+    max-height: 94vh; overflow-y: auto;
+    animation: gatePop .35s ease;
+  }
+  @keyframes gatePop {
+    from { opacity: 0; transform: scale(.92) translateY(10px); }
+    to { opacity: 1; transform: none; }
+  }
+  .gate-card h3 { color: #ffffff; font-size: 1.45em; margin: 4px 0 8px; padding: 0; border: none; }
+  .gate-sub { color: #a7f3d0; font-size: .92em; margin-bottom: 20px; }
+  .gate-sub strong { color: #ffffff; }
+
+  #gateClose {
+    position: absolute; top: 8px; right: 10px;
+    background: none; border: none; color: #8fae9c;
+    font-size: 1.5em; line-height: 1; cursor: pointer; padding: 6px;
+  }
+  #gateClose:hover { color: #ffffff; }
+
+  .gate-field { margin-bottom: 13px; text-align: left; }
+  .gate-field label {
+    display: block; font-size: .78em; color: #bbf7d0;
+    font-weight: 700; margin-bottom: 5px; letter-spacing: .3px;
+  }
+  .gate-field input {
+    width: 100%; background: #06180f; border: 1px solid #2b6e49; color: #e8f5ec;
+    border-radius: 10px; padding: 11px 13px; font-size: .98em; outline: none;
+    transition: border .2s, box-shadow .2s;
+  }
+  .gate-field input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(52, 211, 153, .18); }
+  .gate-field input::placeholder { color: #4f7160; }
+
+  #gateErr { color: #f87171; font-size: .8em; min-height: 1.3em; margin: 2px 0 6px; text-align: left; }
+  .gate-btn {
+    width: 100%; border: none; cursor: pointer;
+    background: linear-gradient(135deg, #34d399, #22c55e); color: #052e16;
+    font-weight: 800; font-size: 1.05em; padding: 14px 20px; border-radius: 12px;
+    box-shadow: 0 8px 26px rgba(52, 211, 153, .3);
+    transition: transform .15s, filter .15s;
+  }
+  .gate-btn:hover { filter: brightness(1.07); transform: translateY(-1px); }
+  .gate-btn:disabled { opacity: .7; cursor: default; transform: none; }
+  .gate-note { color: #6b8f7a; font-size: .72em; margin-top: 14px; line-height: 1.5; }
+  .gate-note a { color: var(--accent); }
+
+  #unlockBanner {
+    position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%);
+    z-index: 900; border: none; cursor: pointer;
+    background: linear-gradient(135deg, #34d399, #22c55e); color: #052e16;
+    font-weight: 800; font-size: .95em; padding: 13px 24px; border-radius: 999px;
+    box-shadow: 0 12px 34px rgba(0, 0, 0, .5);
+    max-width: 96vw; text-align: center;
+    animation: gatePop .3s ease;
+  }
+  #gateToast {
+    position: fixed; top: 18px; left: 50%; z-index: 1100;
+    transform: translateX(-50%) translateY(-90px);
+    background: #052e16; border: 1px solid var(--accent); color: #d1fae5;
+    padding: 13px 24px; border-radius: 12px; font-weight: 700; font-size: .95em;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, .55);
+    transition: transform .35s ease; max-width: 92vw; text-align: center;
+  }
+  #gateToast.show { transform: translateX(-50%) translateY(0); }
+
   @media (max-width: 600px) {
     header h1 { font-size: 1.8em; }
     main { padding: 20px 14px; }
   }
 </style>
+<noscript>
+  <style>
+    body.gated main { filter: none !important; pointer-events: auto !important; user-select: auto !important; }
+    #gateModal, #unlockBanner, #gateToast { display: none !important; }
+  </style>
+</noscript>
 </head>
-<body>
+<body class="gated">
+<script>try { if (localStorage.getItem('th_unlocked_v1') === '1') { document.body.classList.remove('gated'); } } catch (e) {}</script>
 
 <header>
   <h1>🚀 Tutorial Hermes Agent</h1>
@@ -475,26 +570,22 @@ telegram:
 <span class="cmd">tail -f ~/.hermes/logs/gateway.log</span>  <span class="comment"># pantau log real-time</span></code></pre>
   </section>
 
-  <!-- CTA Inner Circle VIP (BOTTOM) -->
+  <!-- CTA Workshop (BOTTOM) -->
   <section id="komunitas-bawah" style="margin-top:20px;">
     <div style="background:linear-gradient(135deg,#052e16 0%,#14532d 50%,#16a34a 100%);border:1px solid var(--border);border-radius:20px;padding:40px 24px;text-align:center;">
-      <div style="font-size:3em;margin-bottom:10px;">👑</div>
-      <h2 style="border:none;color:#ffffff;font-size:1.7em;margin-bottom:10px;padding:0;">Inner Circle — Komunitas VIP</h2>
-      <p style="color:#d1fae5;max-width:500px;margin:0 auto 8px;font-size:1em;">
-        Sudah paham dasar? Saatnya naik level — <strong style="color:#ffffff;">VIP access</strong> buat yang serius.
+      <div style="font-size:3em;margin-bottom:10px;">🎯</div>
+      <h2 style="border:none;color:#ffffff;font-size:1.7em;margin-bottom:10px;padding:0;">Workshop Bangun AI Agent</h2>
+      <p style="color:#d1fae5;max-width:540px;margin:0 auto 8px;font-size:1em;">
+        Mau <strong style="color:#ffffff;">bangun AI Agent asisten digital</strong> buat tim sales kamu? Ikutan workshop praktikal ini.
       </p>
       <p style="color:#a7f3d0;max-width:480px;margin:0 auto 20px;font-size:0.9em;">
-        Mentoring grup, studi kasus mendalam, update tools duluan, dan akses eksklusif yang ga ada di komunitas gratis.
+        Dari nol sampai jalan: bikin AI Agent yang bisa bales chat lead, follow-up otomatis, dan bantu closing — tanpa ribet.
       </p>
-      <div style="margin-bottom:18px;">
-        <span style="color:#bbf7d0;font-size:1.1em;text-decoration:line-through;margin-right:10px;">Rp 149.000</span>
-        <span style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.4);color:#ffffff;font-size:1.5em;font-weight:800;padding:4px 16px;border-radius:12px;">Rp 99.000</span>
-      </div>
       <div style="margin-bottom:14px;">
-        <span style="background:#dc2626;color:#ffffff;font-size:0.75em;font-weight:800;padding:4px 12px;border-radius:10px;text-transform:uppercase;letter-spacing:1px;">⚡ Promo 33%</span>
+        <span style="background:#16a34a;color:#ffffff;font-size:0.75em;font-weight:800;padding:4px 12px;border-radius:10px;text-transform:uppercase;letter-spacing:1px;">🚀 Workshop Praktikal</span>
       </div>
-      <a href="https://yapp.ink/s/LgzVv3EzQN" target="_blank" rel="noopener" style="display:inline-block;background:linear-gradient(135deg,#34d399,#4ade80);color:#052e16;text-decoration:none;font-weight:800;font-size:1.1em;padding:16px 44px;border-radius:14px;box-shadow:0 8px 30px rgba(52,211,153,0.35);">👑 Join Inner Circle — Rp 99.000</a>
-      <p style="color:#bbf7d0;font-size:0.8em;margin-top:16px;">Kuota terbatas — harga promo naik setelah penuh!</p>
+      <a href="https://xindelabs-workshop.vercel.app" target="_blank" rel="noopener" style="display:inline-block;background:linear-gradient(135deg,#34d399,#4ade80);color:#052e16;text-decoration:none;font-weight:800;font-size:1.1em;padding:16px 44px;border-radius:14px;box-shadow:0 8px 30px rgba(52,211,153,0.35);">🎯 Intip Workshop Sekarang</a>
+      <p style="color:#bbf7d0;font-size:0.8em;margin-top:16px;">Khusus buat sales person & pemilik bisnis yang mau pakai AI Agent sekarang juga.</p>
     </div>
   </section>
 
@@ -504,6 +595,150 @@ telegram:
   <p>📚 Tutorial Hermes Agent — dibuat dengan ❤️ untuk komunitas belajar AI</p>
   <p>Dokumentasi resmi: <a href="https://hermes-agent.nousresearch.com/docs" style="color: var(--accent);">hermes-agent.nousresearch.com/docs</a></p>
 </footer>
+
+<!-- ===== LEAD GATE MODAL (unlock tutorial) ===== -->
+<div id="gateModal" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+  <div class="gate-card">
+    <button type="button" id="gateClose" aria-label="Tutup modal">✕</button>
+    <div style="font-size:2.4em;line-height:1;">🔓</div>
+    <h3 id="gateTitle">Unlock Tutorial Lengkap</h3>
+    <p class="gate-sub">Panduan Hermes Agent <strong>12 bab — dari instalasi sampai automasi</strong> langsung kebuka setelah isi form di bawah. <strong>Gratis!</strong></p>
+    <form id="gateForm" novalidate>
+      <div class="gate-field">
+        <label for="gateNama">Nama Lengkap</label>
+        <input type="text" id="gateNama" name="nama" placeholder="cth: Budi Santoso" autocomplete="name">
+      </div>
+      <div class="gate-field">
+        <label for="gateEmail">Email Aktif</label>
+        <input type="email" id="gateEmail" name="email" placeholder="cth: budi@gmail.com" autocomplete="email">
+      </div>
+      <div class="gate-field">
+        <label for="gateWa">No. WhatsApp</label>
+        <input type="tel" id="gateWa" name="wa" placeholder="cth: 081234567890" autocomplete="tel">
+      </div>
+      <div id="gateErr"></div>
+      <button type="submit" id="gateSubmit" class="gate-btn">🔓 Buka Tutorial Sekarang</button>
+    </form>
+    <p class="gate-note">🔒 Data kamu aman & hanya dipakai untuk materi belajar. <a href="privacy.html">Kebijakan Privasi</a></p>
+  </div>
+</div>
+
+<!-- Sticky banner: muncul kalau modal ditutup tanpa submit -->
+<button type="button" id="unlockBanner" class="hidden">🔒 Isi form untuk unlock tutorial lengkap</button>
+
+<!-- Toast sukses -->
+<div id="gateToast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+  var LS_KEY = 'th_unlocked_v1';
+  var PROXY_URL = 'http://43.133.131.126:8787/';
+  var modal = document.getElementById('gateModal');
+  var banner = document.getElementById('unlockBanner');
+  var toast = document.getElementById('gateToast');
+  var form = document.getElementById('gateForm');
+  var errEl = document.getElementById('gateErr');
+  var btn = document.getElementById('gateSubmit');
+  var fields = {
+    nama: document.getElementById('gateNama'),
+    email: document.getElementById('gateEmail'),
+    wa: document.getElementById('gateWa')
+  };
+
+  function isUnlocked() {
+    try { return localStorage.getItem(LS_KEY) === '1'; } catch (e) { return false; }
+  }
+
+  function unlock() {
+    document.body.classList.remove('gated');
+    document.body.classList.remove('modal-open');
+    modal.classList.add('hidden');
+    banner.classList.add('hidden');
+    try { localStorage.setItem(LS_KEY, '1'); } catch (e) {}
+  }
+
+  function showModal() {
+    modal.classList.remove('hidden');
+    banner.classList.add('hidden');
+    document.body.classList.add('modal-open');
+    errEl.textContent = '';
+    if (fields.nama) fields.nama.focus();
+  }
+
+  function dismissModal() {
+    modal.classList.add('hidden');
+    document.body.classList.remove('modal-open');
+    if (!isUnlocked()) banner.classList.remove('hidden');
+  }
+
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(function () { toast.classList.remove('show'); }, 4500);
+  }
+
+  function validEmail(s) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(s);
+  }
+
+  function sendLead(payload) {
+    // Fire-and-forget via no-cors: proxy menambahkan token rahasia server-side,
+    // lalu meneruskan ke Google Apps Script -> Google Sheet.
+    try {
+      fetch(PROXY_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+        body: JSON.stringify(payload)
+      }).catch(function () {});
+    } catch (e) {}
+  }
+
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var nama = fields.nama.value.trim();
+    var email = fields.email.value.trim();
+    var wa = fields.wa.value.replace(/\D/g, '');
+    var msg = '';
+    if (!nama) {
+      msg = 'Nama wajib diisi dulu ya 🙏';
+    } else if (!validEmail(email)) {
+      msg = 'Format email belum benar — cek lagi ya.';
+    } else if (wa.length < 8) {
+      msg = 'Nomor WhatsApp minimal 8 digit — cek kembali.';
+    }
+    errEl.textContent = msg;
+    if (msg) return;
+
+    btn.disabled = true;
+    btn.textContent = '⏳ Membuka tutorial...';
+    sendLead({ nama: nama, email: email, wa: wa, website: '' });
+
+    setTimeout(function () {
+      unlock();
+      btn.disabled = false;
+      btn.textContent = '🔓 Buka Tutorial Sekarang';
+      showToast('🎉 Terima kasih, ' + nama.split(' ')[0] + '! Tutorial sudah terbuka — selamat belajar!');
+    }, 700);
+  });
+
+  document.getElementById('gateClose').addEventListener('click', dismissModal);
+  banner.addEventListener('click', showModal);
+  modal.addEventListener('click', function (ev) {
+    if (ev.target === modal) dismissModal();
+  });
+  document.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Escape' && !modal.classList.contains('hidden')) dismissModal();
+  });
+
+  if (isUnlocked()) {
+    unlock();
+  } else {
+    showModal();
+  }
+})();
+</script>
 
 </body>
 </html>

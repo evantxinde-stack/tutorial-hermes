@@ -269,7 +269,9 @@
     <a href="#studi-kasus">10. Studi Kasus</a>
     <a href="#faq">11. FAQ</a>
     <a href="#troubleshoot">12. Troubleshooting</a>
-    <a href="#komunitas">13. AI Connect Circle (Gratis)</a>
+    <a href="#workspace">13. Hermes Workspace</a>
+    <a href="#bot-mode">14. Bot Mode — Tim AI Agent</a>
+    <a href="#komunitas">15. AI Connect Circle (Gratis)</a>
   </nav>
 
   <section id="apa-itu">
@@ -568,6 +570,75 @@ telegram:
     <pre><code><span class="cmd">hermes doctor</span>            <span class="comment"># cek kesehatan semua komponen</span>
 <span class="cmd">hermes --version</span>          <span class="comment"># cek versi terinstall</span>
 <span class="cmd">tail -f ~/.hermes/logs/gateway.log</span>  <span class="comment"># pantau log real-time</span></code></pre>
+  </section>
+
+  <section id="workspace">
+    <h2>13. Hermes Workspace — Web Control Center</h2>
+    <p><strong>Hermes Workspace</strong> adalah <strong>web UI lengkap</strong> buat ngatur Hermes Agent langsung dari browser — chat, terminal, memory, skills, jobs, sampai MCP, semua nyatu dalam satu dashboard. Gak perlu bolak-balik buka terminal; cukup browser, dan seluruh agent lo bisa dikendalikan dari satu tempat.</p>
+
+    <h3>⚡ Fitur Utama</h3>
+    <ul>
+      <li>💬 <strong>Chat SSE streaming</strong> — respons real-time kayak ngetik di chat biasa</li>
+      <li>🖥️ <strong>Terminal web</strong> — jalanin command langsung dari browser</li>
+      <li>🧠 <strong>Memory editor</strong> — lihat & edit memori agent secara visual</li>
+      <li>📚 <strong>Skills browser</strong> — jelajah 2000+ skill yang tersedia</li>
+      <li>🔌 <strong>MCP page</strong> — kelola Model Context Protocol (MCP) servers</li>
+      <li>📊 <strong>Dashboard</strong> — pantau sessions, model mix, dan cost</li>
+      <li>👁️ <strong>Agent View</strong> — lihat aktivitas agent secara real-time</li>
+      <li>🌊 <strong>Swarm Mode</strong> — control plane buat banyak agent sekaligus</li>
+      <li>📋 <strong>TaskBoard (kanban)</strong> — atur tugas agent ala kanban board</li>
+      <li>🖥️ <strong>TUI view</strong> — tampilan terminal buat yang kangen CLI</li>
+      <li>📱 <strong>PWA</strong> — bisa di-install kayak app native di HP</li>
+    </ul>
+
+    <h3>🛠️ Cara Akses</h3>
+    <p>Workspace terdiri dari 3 komponen yang jalan bareng:</p>
+    <pre><code><span class="cmd">hermes gateway run</span>    <span class="comment"># API gateway — port :8642</span>
+<span class="cmd">hermes dashboard</span>    <span class="comment"># dashboard UI — port :9119</span>
+<span class="cmd">pnpm dev</span>            <span class="comment"># workspace frontend — port :3000</span></code></pre>
+    <p>Buat pairing ketiganya, set variabel ini di file <code>.env</code>:</p>
+    <pre><code><span class="cmd">HERMES_API_URL=http://localhost:8642</span>
+<span class="cmd">HERMES_DASHBOARD_URL=http://localhost:9119</span></code></pre>
+
+    <h3>📱 Akses dari HP</h3>
+    <p>Workspace bisa diakses dari HP via <strong>Cloudflare tunnel</strong>, <strong>Tailscale</strong>, atau <strong>LAN</strong> — dan karena ini PWA, lo bisa <strong>install langsung kayak app</strong> di home screen HP. Ngatur agent dari mana aja, kapan aja.</p>
+
+    <h3>🌊 Highlight: Swarm Mode</h3>
+    <p><strong>Swarm Mode</strong> ngubah Workspace jadi control plane buat <strong>unlimited Hermes Agents</strong> dengan 1 orchestrator. Agent-agent jalan di atas tmux-backed workers, tugas di-dispatch per role, dan hasilnya di-track lewat kanban. Cocok banget buat lo yang mau menjalankan banyak agent dengan pembagian peran yang jelas.</p>
+  </section>
+
+  <section id="bot-mode">
+    <h2>14. Bot Mode — Tim AI Agent</h2>
+    <p><strong>Bot Mode</strong> ngubah profile Hermes jadi <strong>"Bot"</strong> — tiap bot punya role, model, memory, skills, dan avatar sendiri. Bot-bot ini bisa jalanin rutinitas, diskusi di group chat, sampai saling kirim pesan satu sama lain. Intinya: lo punya <strong>tim AI agent</strong> yang kerja bareng.</p>
+
+    <h3>🧩 Konsep Inti</h3>
+    <ul>
+      <li><strong>Bot = Hermes profile</strong> — config, memory, skills, dan chat tiap bot ter-isolasi di <code>~/.hermes/profiles/&lt;nama&gt;/</code></li>
+      <li><strong>Bot Mode = UI di atas profile</strong> — cara ngatur & ngobrol sama bot-bot itu</li>
+      <li>Semua bot juga <strong>visible di CLI</strong> — bukan cuma di UI</li>
+    </ul>
+
+    <h3>✨ Fitur</h3>
+    <ol>
+      <li><strong>Roster bot + avatar</strong> — blob face, geometric, upload gambar sendiri, AI-generated, atau pet</li>
+      <li><strong>Bot chat canonical</strong> — riwayat persisten; <code>/new</code> di-reroute ke <code>/compact</code> biar konteks gak ilang</li>
+      <li><strong>Bot-to-bot messaging</strong> — pake <code>@mention</code> atau <code>message_agent(target=...)</code>; bot nyusun pesannya sendiri lengkap dengan atribusi</li>
+      <li><strong>Group chats</strong> — 2–6 bot diskusi, maksimal 3 ronde, <code>@mention</code> buat scope pembicaraan, escalate ke <code>@user</code> kalau perlu</li>
+      <li><strong>Routines</strong> — jadwal per bot via cron namespaced <code>[bot:&lt;nama&gt;]</code></li>
+      <li><strong>Create on</strong> — pilih device tempat bot jalan (multi-connection)</li>
+      <li><strong><code>hermes peer</code></strong> — bot lintas gateway bisa saling DM</li>
+    </ol>
+
+    <h3>🤖 Cara Bikin Bot</h3>
+    <p><strong>Via Hermes Desktop:</strong> buka tab <strong>Bots</strong> → <strong>New Agent</strong> → isi <strong>Nama / Title / Description</strong>. Di bagian <strong>Advanced</strong> lo bisa clone profile, pin model, set <code>SOUL.md</code>, dan pilih skills.</p>
+    <p><strong>Via CLI:</strong></p>
+    <pre><code><span class="cmd">hermes profile create &lt;nama&gt; --clone</span></code></pre>
+
+    <h3>💼 Use Case: Tim Digital Marketing</h3>
+    <p>Bayangin lo bikin bot-bot dengan peran spesifik — <strong>research bot</strong>, <strong>copy bot</strong>, <strong>creative bot</strong>, <strong>ads bot</strong>, <strong>finance bot</strong>, dan <strong>CRM bot</strong> — masing-masing pake skill & model sendiri, lalu mereka diskusi di group chat buat nyusun campaign. Tiap bot fokus di bidangnya, hasilnya lebih rapi dan terukur.</p>
+
+    <h3>⚙️ Konfigurasi</h3>
+    <pre><code><span class="cmd">agent.bot_mode_protocol: true</span>   <span class="comment"># aktifkan Bot Mode (default)</span></code></pre>
   </section>
 
   <!-- CTA Workshop (BOTTOM) -->

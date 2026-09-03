@@ -219,7 +219,7 @@
 </noscript>
 </head>
 <body class="gated">
-<script>try { if (localStorage.getItem('th_unlocked_v1') === '1') { document.body.classList.remove('gated'); } } catch (e) {}</script>
+<script>try { var up = new URLSearchParams(window.location.search); if (up.get('unlocked') === '1') { localStorage.setItem('th_unlocked_v1', '1'); } if (localStorage.getItem('th_unlocked_v1') === '1') { document.body.classList.remove('gated'); } } catch (e) {}</script>
 
 <header>
   <h1>🚀 Tutorial Hermes Agent</h1>

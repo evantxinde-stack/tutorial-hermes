@@ -763,15 +763,59 @@ telegram:
     return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(s);
   }
 
+  var LEAD_QUEUE_KEY = 'lead_queue_v1';
+
+  function queueLead(data) {
+    try {
+      var q = JSON.parse(localStorage.getItem(LEAD_QUEUE_KEY) || '[]');
+      q.push(data);
+      localStorage.setItem(LEAD_QUEUE_KEY, JSON.stringify(q));
+    } catch (e) {}
+  }
+
+  function removeQueuedLead(data) {
+    // Lead yang sudah terkirim dikeluarkan dari antrian supaya tidak terkirim dobel
+    // saat flushLeadQueue() berjalan di load berikutnya.
+    try {
+      var sent = JSON.stringify(data);
+      var q = JSON.parse(localStorage.getItem(LEAD_QUEUE_KEY) || '[]');
+      localStorage.setItem(LEAD_QUEUE_KEY, JSON.stringify(q.filter(function (it) {
+        return JSON.stringify(it) !== sent;
+      })));
+    } catch (e) {}
+  }
+
+  function flushLeadQueue() {
+    // Retry semua lead di lead_queue_v1 yang gagal terkirim (dipanggil tiap halaman dimuat).
+    try {
+      var q = JSON.parse(localStorage.getItem(LEAD_QUEUE_KEY) || '[]');
+      if (!q.length) return;
+      q.forEach(function (item) {
+        try {
+          fetch(PROXY_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(item)
+          }).catch(function () {});
+        } catch (e) {}
+      });
+      localStorage.removeItem(LEAD_QUEUE_KEY);
+    } catch (e) {}
+  }
+
   function sendLead(payload) {
-    // Fire-and-forget via no-cors: proxy menambahkan token rahasia server-side,
-    // lalu meneruskan ke Google Apps Script -> Google Sheet.
+    // Lead SUDAH di-queue dulu oleh submit handler sebelum fungsi ini dipanggil,
+    // jadi kalau fetch gagal, lead tetap aman di localStorage dan akan di-retry
+    // oleh flushLeadQueue() saat load berikutnya. Tidak ada lead yang hilang diam-diam.
     try {
       fetch(PROXY_URL, {
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
         body: JSON.stringify(payload)
+      }).then(function () {
+        removeQueuedLead(payload); // terkirim → hapus dari antrian (cegah duplikat)
       }).catch(function () {});
     } catch (e) {}
   }
@@ -794,7 +838,9 @@ telegram:
 
     btn.disabled = true;
     btn.textContent = '⏳ Membuka tutorial...';
-    sendLead({ nama: nama, email: email, wa: wa, website: '', source: 'tutorial' });
+    var payload = { nama: nama, email: email, wa: wa, website: '', source: 'tutorial' };
+    queueLead(payload); // 1) simpan dulu — lead tidak akan hilang walau fetch gagal
+    sendLead(payload);  // 2) kirim sekarang; unlock tetap jalan apa pun hasilnya
 
     setTimeout(function () {
       unlock();
@@ -812,6 +858,8 @@ telegram:
   document.addEventListener('keydown', function (ev) {
     if (ev.key === 'Escape' && !modal.classList.contains('hidden')) dismissModal();
   });
+
+  flushLeadQueue(); // retry lead yang gagal terkirim sebelumnya (aman dipanggil tiap load)
 
   if (isUnlocked()) {
     unlock();

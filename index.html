@@ -281,7 +281,9 @@
     <a href="#troubleshoot">12. Troubleshooting</a>
     <a href="#workspace">13. Hermes Workspace</a>
     <a href="#bot-mode">14. Bot Mode — Tim AI Agent</a>
-    <a href="#komunitas">15. AI Connect Circle (Gratis)</a>
+    <a href="#opencode">15. OpenCode — Coding Agent Gratisan</a>
+    <a href="#kombinasi">16. Kombinasi Hermes × OpenCode</a>
+    <a href="#komunitas">17. AI Connect Circle (Gratis)</a>
   </nav>
 
   <section id="apa-itu">
@@ -649,6 +651,102 @@ telegram:
 
     <h3>⚙️ Konfigurasi</h3>
     <pre><code><span class="cmd">agent.bot_mode_protocol: true</span>   <span class="comment"># aktifkan Bot Mode (default)</span></code></pre>
+  </section>
+
+  <section id="opencode">
+    <h2>15. OpenCode — Coding Agent Gratisan</h2>
+    <p><strong>OpenCode</strong> itu coding agent open-source (terminal-based) yang bisa ngerjain tugas coding secara otonom: nulis fitur, refactor, review PR, samperbaiki test. Bedanya sama Hermes: Hermes dirancang jadi <em>asisten pribadi serbaguna</em> (chat, otomasi, integrasi Telegram), OpenCode fokus jadi <em>tukang coding</em> yang jalan di dalam repo proyek lo.</p>
+
+    <h3>📦 Instalasi</h3>
+    <pre><code>npm i -g opencode-ai@latest
+<span class="comment"># atau macOS:</span>
+brew install anomalyco/tap/opencode</code></pre>
+
+    <h3>🔑 Setup Auth (pilih satu)</h3>
+    <pre><code><span class="comment"># Login interaktif:</span>
+opencode auth login
+
+<span class="comment"># Atau pakai provider via env var (contoh OpenRouter):</span>
+export OPENROUTER_API_KEY=sk-or-...</code></pre>
+    <p>Cek koneksi: <code>opencode auth list</code> — minimal harus muncul 1 provider.</p>
+
+    <h3>🚀 Cara Pakai Harian</h3>
+    <pre><code><span class="comment"># Mode interaktif (TUI) di dalam folder proyek:</span>
+cd proyek-lo
+opencode
+
+<span class="comment"># Mode one-shot (non-interaktif, cocok buat skrip):</span>
+opencode run "Tambahkan validasi email di form registrasi + update testnya"</code></pre>
+
+    <h3>⌨️ Keybinding Penting (TUI)</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Key</th><th>Fungsi</th></tr>
+        <tr><td><code>Enter</code></td><td>Kirim pesan (kadang perlu 2×)</td></tr>
+        <tr><td><code>Tab</code></td><td>Ganti mode build/plan</td></tr>
+        <tr><td><code>Ctrl+P</code></td><td>Command palette</td></tr>
+        <tr><td><code>Ctrl+X L</code></td><td>Ganti session</td></tr>
+        <tr><td><code>Ctrl+X M</code></td><td>Ganti model</td></tr>
+        <tr><td><code>Ctrl+C</code></td><td>Keluar</td></tr>
+      </table>
+    </div>
+    <div class="tip"><strong>Tip:</strong> jangan pakai <code>/exit</code> buat keluar — itu gak valid, malah buka dialog. Pakai <code>Ctrl+C</code> atau langsung kill prosesnya.</div>
+
+    <h3>💡 Workflow yang Dianjurkan</h3>
+    <p>OpenCode paling enak dipakai dengan pola: <strong>satu sesi = satu repo = satu tugas</strong>. Untuk tugas paralel, pisahkan per folder/worktree biar gak tabrakan. Setiap selesai, commit + push ke GitHub — baru dideploy atau direview.</p>
+  </section>
+
+  <section id="kombinasi">
+    <h2>16. Kombinasi Hermes × OpenCode</h2>
+    <p>Di sinilah magic-nya: Hermes = <strong>otak strategis</strong> (ngobrol, mikir, integrate), OpenCode = <strong>tangan teknis</strong> (ngoding di repo). Hermes bisa delegate tugas coding ke OpenCode, terus hasilnya di-review & dideploy balik.</p>
+
+    <h3>🧠 Pembagian Peran</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Kebutuhan</th><th>Siapa yang kerjain</th></tr>
+        <tr><td>"Bikinin aku landing page buat produk X"</td><td>Hermes → delegate ke OpenCode → hasil di-push ke GitHub</td></tr>
+        <tr><td>"Review PR #12, cari bug"</td><td>OpenCode (mode PR review), hasilnya dilaporkan ke Hermes</td></tr>
+        <tr><td>"Deploy ke Vercel"</td><td>Hermes (pakai vercel CLI / git push)</td></tr>
+        <tr><td>"Jadikan cron: tiap Senin cek error log"</td><td>Hermes (cronjob) → kalau butuh fix kode → panggil OpenCode</td></tr>
+        <tr><td>"Bikinin skill Hermes untuk auto-deploy"</td><td>Hermes (skill = file markdown, gak perlu coding) + OpenCode (kalau perlu script pendukung)</td></tr>
+      </table>
+    </div>
+
+    <h3>🔗 Pola Integrasi (Hermes memanggil OpenCode)</h3>
+    <pre><code><span class="comment"># Hermes menjalankan OpenCode sebagai subprocess:</span>
+opencode run "Benerin bug di src/api/payments.ts: Mayar callback
+dapat amount=0 kalau voucher dipakai. Tambahin regression test."
+<span class="comment"># OpenCode kerjain → commit → Hermes review hasilnya → push</span></code></pre>
+
+    <h3>📌 Use Case 1: Build Fitur End-to-End</h3>
+    <p><strong>Scenario:</strong> Bos minta "tambahin halaman pricing buat 3 paket".</p>
+    <ol>
+      <li>Hermes terjemahin brief → spec teknis (komponen, styling, routing)</li>
+      <li>Delegate ke OpenCode: <code>opencode run "Buat halaman /pricing dengan 3 kartu paket..."</code></li>
+      <li>OpenCode ngoding + commit di branch <code>feat/pricing</code></li>
+      <li>Hermes review → merge → deploy → kasih laporan ke Bos</li>
+    </ol>
+
+    <h3>📌 Use Case 2: DevOps Otomatis</h3>
+    <p><strong>Scenario:</strong> tiap ada bug report di Telegram, Hermes:</p>
+    <ol>
+      <li>Tangkap pesan bug → kategorikan severity</li>
+      <li>Jalankan OpenCode di background: <code>opencode run "Investigasi issue: [deskripsi]"</code></li>
+      <li>OpenCode balikin analisa + patch proposal</li>
+      <li>Hermes kirim ringkasan + link PR ke Bos untuk approve</li>
+    </ol>
+
+    <h3>📌 Use Case 3: Content-to-Code Pipeline</h3>
+    <p><strong>Scenario:</strong> tiap rilis produk baru, Hermes generate: copywriting landing page → OpenCode implement halamannya → Hermes deploy ke Vercel → Hermes jadwalkan cron promo di Telegram. Semua dari satu perintah chat.</p>
+
+    <h3>💰 Kenapa Kombinasi Ini Efisien</h3>
+    <ul>
+      <li><strong>Hemat token API:</strong> kerjaan berat (baca banyak file, refactor) didelegasikan ke OpenCode yang pakai model coding-specific — Hermes gak perlu "buka" semua file itu di context-nya</li>
+      <li><strong>Isolation:</strong> OpenCode kerja di folder repo, Hermes gak "kepancing" ngerjain hal di luar scope</li>
+      <li><strong>Spesialisasi:</strong> tiap tool fokus di kekuatannya masing-masing</li>
+    </ul>
+
+    <div class="tip"><strong>Best practice:</strong> selalu kasih OpenCode instruksi yang spesifik (file mana, expected behavior, constraint), bukan instruction umum. Semakin jelas brief, semakin bagus hasilnya.</div>
   </section>
 
   <!-- CTA Workshop (BOTTOM) -->

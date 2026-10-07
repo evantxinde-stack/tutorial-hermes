@@ -255,6 +255,18 @@
     </div>
   </section>
 
+  <!-- Workshop promo: countdown + code -->
+  <section id="promo-workshop" style="margin-bottom:30px;">
+    <div style="background:linear-gradient(135deg,#431407 0%,#9a3412 100%);border:1px solid #fb923c;border-radius:18px;padding:28px 22px;text-align:center;box-shadow:0 10px 30px rgba(154,52,18,0.22);">
+      <div style="font-size:2em;margin-bottom:8px;">🔥</div>
+      <h2 style="border:none;color:#ffffff;font-size:1.45em;margin:0 0 8px;padding:0;">Promo Workshop berakhir dalam</h2>
+      <div id="workshopPromoCountdown" style="color:#fed7aa;font-size:clamp(1.8em,6vw,2.6em);font-weight:800;letter-spacing:2px;font-variant-numeric:tabular-nums;margin:10px 0 18px;">-- hari --:--:--</div>
+      <p style="color:#ffedd5;margin:0 0 10px;font-size:0.92em;">Pakai kode promo ini saat checkout:</p>
+      <div style="display:inline-block;background:#fff7ed;color:#9a3412;border:2px dashed #fb923c;border-radius:12px;padding:10px 24px;font-size:1.35em;font-weight:900;letter-spacing:2px;">EARLYBIRD</div>
+      <p style="color:#fed7aa;font-size:0.8em;margin:12px 0 0;">Harga workshop dari Rp 599.000 jadi Rp 199.000 · kuota terbatas</p>
+    </div>
+  </section>
+
   <!-- Workshop offer strip (slim) -->
   <section style="margin-bottom:30px;">
     <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(135deg,#052e16 0%,#14532d 100%);border:1px solid #16a34a;border-radius:14px;padding:14px 20px;">
@@ -774,6 +786,30 @@ dapat amount=0 kalau voucher dipakai. Tambahin regression test."
   <p>📚 Tutorial Hermes Agent — dibuat dengan ❤️ untuk komunitas belajar AI</p>
   <p>Dokumentasi resmi: <a href="https://hermes-agent.nousresearch.com/docs" style="color: var(--accent);">hermes-agent.nousresearch.com/docs</a></p>
 </footer>
+
+<script>
+(function () {
+  var el = document.getElementById('workshopPromoCountdown');
+  if (!el) return;
+
+  function render() {
+    var now = new Date();
+    var end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+    var diff = Math.max(0, end.getTime() - now.getTime());
+    var total = Math.floor(diff / 1000);
+    var days = Math.floor(total / 86400);
+    var hours = Math.floor((total % 86400) / 3600);
+    var minutes = Math.floor((total % 3600) / 60);
+    var seconds = total % 60;
+    el.textContent = days + ' hari ' + [hours, minutes, seconds].map(function (n) {
+      return String(n).padStart(2, '0');
+    }).join(':');
+  }
+
+  render();
+  setInterval(render, 1000);
+})();
+</script>
 
 <!-- ===== LEAD GATE MODAL (unlock tutorial) ===== -->
 <div id="gateModal" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
